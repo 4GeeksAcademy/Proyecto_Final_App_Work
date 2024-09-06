@@ -1,77 +1,73 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react'; // Importar useState
 import { Context } from "../store/appContext";
+import { CardOffer } from "./CardOffer.jsx";
+import "../../styles/favoritos.css";
 
 export const Favoritos = () => {
     const { store, actions } = useContext(Context);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filterTerm, setFilterTerm] = useState("");
+    const [filters, setFilters] = useState({ 
+        
+        searchText: "",
+
+    });
 
     useEffect(() => {
-        actions.getFavorites();
+        actions.getFavorites(); 
     }, []);
 
+    if (!store.favorites || store.favorites.length === 0) {
+        return <div className="favorites-no-favorites">No tienes ofertas guardadas como favoritas.</div>;
+    }
 
-    const renderFavoriteInfo = (favorito) => {
-        if (favorito.oferta_id) {
-            return (
-                <>
-                    <h5 className="card-title">{favorito.ofertas.name}</h5>
-                    <p className="card-text">{favorito.ofertas.descripcion}</p>
-                    <p className="card-text"><strong>Empresa:</strong> {favorito.ofertas.nombre_empresa}</p>
-                </>
-            );
-        } else if (favorito.programador_id) {
-            return (
-                <>
-                    <h5 className="card-title">{favorito.programador.user.name}</h5>
-                    <p className="card-text">{favorito.programador.descripcion}</p>
-                    <p className="card-text"><strong>Tecnologías:</strong> {favorito.programador.tecnologias}</p>
-                    <p className="card-text"><strong>Experiencia:</strong> {favorito.programador.experiencia}</p>
-                </>
-            );
-        } else if (favorito.empleador_id) {
-            return (
-                <>
-                    <h5 className="card-title">{favorito.empleador.user.name}</h5>
-                    <p className="card-text">{favorito.empleador.descripcion}</p>
-                    <p className="card-text"><strong>CIF:</strong> {favorito.empleador.cif}</p>
-                </>
-            );
-        } else {
-            return <p className="card-text">Información no disponible</p>;
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleSearchClick = () => {
+        setFilterTerm(searchTerm);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSearchClick();
         }
     };
 
+    const handleFiltersChange = (updatedFilters) => {
+        setFilters(updatedFilters);
+    };
+
     return (
-        <div className="container mt-5">
-            <div className="row">
-            {store.favorites && store.favorites.length > 0 ? (
-                        store.favorites.map((favorito, index) => (
-                            <div key={index} className="col-md-4 mb-3">
-                                <div className="card">
-                                    <div className="card-body">
-                                        {renderFavoriteInfo(favorito)}
-                                        <button
-                                            className="btn btn-danger mt-3"
-                                            onClick={() =>
-                                                actions.removeFavorite(
-                                                    favorito.programador_id,
-                                                    favorito.empleador_id,
-                                                    favorito.oferta_id
-                                                )
-                                            }
-                                        >
-                                            Eliminar
-                                        </button>
-                                    </div>
-                                </div>
+        <div className="favorites-body">
+            <div className="favorites-container">
+                <h1 className="favorites-title">Tus Favoritos</h1>
+                <div className="search-bar d-flex">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Buscar favoritos..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <button className="btn btn-search ms-3" onClick={handleSearchClick}>
+                        Buscar
+                    </button>
+                </div>
+                <div className="favorites-row">
+                    {store.favorites
+                        .filter(favoriteOffer => 
+                            favoriteOffer.name.toLowerCase().includes(filterTerm.toLowerCase())
+                        )
+                        .map((favoriteOffer) => (
+                            <div className="favorites-card-offer" key={favoriteOffer.id}>
+                                <CardOffer id={favoriteOffer.id} />
                             </div>
-                        ))
-                    ) : (
-                        <div className="col-12">
-                            <p className="text-center">No tienes favoritos aún.</p>
-                        </div>
-                    )}
+                        ))}
                 </div>
             </div>
-
+        </div>
     );
 };

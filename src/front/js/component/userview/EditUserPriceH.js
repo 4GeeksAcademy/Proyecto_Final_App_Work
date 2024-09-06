@@ -1,45 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { Context } from '../../store/appContext'; 
 
-export const EditUserPrice = ({ increaseProgress }) => {
-    const [userPrice, setUserPrice] = useState(50); 
+export const EditUserPrice = ({ userId, increaseProgress }) => {
+    const { store, actions } = useContext(Context); // Usa el contexto
     const [showModal, setShowModal] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState('EUR');
+
+    // Recuperar el precio y la moneda desde localStorage o usar valores por defecto
+    const [userPrice, setUserPrice] = useState(() => {
+        const storedPrice = localStorage.getItem('userPrice');
+        return storedPrice ? JSON.parse(storedPrice) : (store.user?.price || 50);
+    });
+
+    const [selectedCurrency, setSelectedCurrency] = useState(() => {
+        const storedCurrency = localStorage.getItem('selectedCurrency');
+        return storedCurrency ? JSON.parse(storedCurrency) : (store.user?.currency || 'EUR');
+    });
+
+    useEffect(() => {
+        const fetchUserPrice = async () => {
+            try {
+                await actions.getUserPrice(userId);
+                // Actualiza los estados locales después de cargar los datos
+                setUserPrice(store.user?.price || 50);
+                setSelectedCurrency(store.user?.currency || 'EUR');
+            } catch (error) {
+                console.error("Error al obtener el precio del usuario:", error);
+            }
+        };
+
+        fetchUserPrice();
+    }, [userId, actions, store.user?.price, store.user?.currency]);
+
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
-        handleClose();
-        increaseProgress(10); 
-    };
-
-    
-    const handleRangeChange = (e) => {
-        setUserPrice(e.target.value);
-    };
-
-    
-    const handleCurrencyChange = (e) => {
-        setSelectedCurrency(e.target.value);
+        try {
+            const response = await actions.updateUserPrice(userId, userPrice, selectedCurrency);
+            if (response) {
+                // Guardar los cambios en localStorage
+                localStorage.setItem('userPrice', JSON.stringify(userPrice));
+                localStorage.setItem('selectedCurrency', JSON.stringify(selectedCurrency));
+                increaseProgress(10);
+            }
+        } catch (error) {
+            console.error("Error al guardar el precio del usuario:", error);
+        } finally {
+            handleClose();
+        }
     };
 
     return (
         <>
             <div className="d-flex align-items-center" style={{ color: 'Black', fontFamily: 'Arial, sans-serif', fontWeight: 'bold' }}>
-            <button
+                <button
                     type="button"
                     className="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center ms-2"
                     style={{ width: 25, height: 25, backgroundColor: 'rgba(103, 147, 174, 1)', boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)', marginRight: '10px' }}
                     onClick={handleShow}
                 >
-                    <FontAwesomeIcon icon={faEdit}  style={{width: '15px', height: '15px',}}/>
+                    <FontAwesomeIcon icon={faEdit} style={{ width: '15px', height: '15px' }} />
                 </button>
                 <div>
-                    <p className="mb-0">Precio/Hora</p> 
-                    <p className="mb-0">{`${userPrice} ${selectedCurrency}`}</p> 
+                    <p className="mb-0">Precio/Hora</p>
+                    <p className="mb-0">{`${userPrice} ${selectedCurrency}`}</p>
                 </div>
             </div>
 
@@ -56,7 +84,7 @@ export const EditUserPrice = ({ increaseProgress }) => {
                                 max="500"
                                 step="5"
                                 value={userPrice}
-                                onChange={handleRangeChange}
+                                onChange={(e) => setUserPrice(e.target.value)}
                             />
                             <Form.Text>{`Precio Seleccionado: ${userPrice} ${selectedCurrency}`}</Form.Text>
                         </Form.Group>
@@ -66,7 +94,7 @@ export const EditUserPrice = ({ increaseProgress }) => {
                             <Form.Control
                                 as="select"
                                 value={selectedCurrency}
-                                onChange={handleCurrencyChange}
+                                onChange={(e) => setSelectedCurrency(e.target.value)}
                             >
                                 <option value="EUR">EUR - Euro</option>
                                 <option value="USD">USD - Dólar</option>
@@ -75,14 +103,14 @@ export const EditUserPrice = ({ increaseProgress }) => {
                                 <option value="CNY">CNY - Yuan chino</option>
                             </Form.Control>
                         </Form.Group>
+                        <Button type="submit" variant="secondary" style={{ backgroundColor: 'rgba(103, 147, 174, 0.27)', color: 'rgba(103, 147, 174, 1)' }}>
+                            Guardar
+                        </Button>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose} style={{ backgroundColor: 'rgba(103, 147, 174, 1)' }}>
                         Cancelar
-                    </Button>
-                    <Button type="submit" variant="secondary" onClick={handleSave} style={{ backgroundColor: 'rgba(103, 147, 174, 0.27)', color: 'rgba(103, 147, 174, 1)' }}>
-                        Guardar
                     </Button>
                 </Modal.Footer>
             </Modal>

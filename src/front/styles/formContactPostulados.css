@@ -1,0 +1,134 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,800);
+
+
+
+.seccion-form {
+    padding: 2em 10px;
+    font-family: sans-serif;
+    font-family: "Open Sans", sans-serif;
+
+}
+
+.seccion-form h1 {
+    color: #65889e;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.seccion-form h5 {
+    color: #65889e;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #65889e;
+
+}
+
+div.form-contact-postulados {
+    width: 100%;
+    max-width: 450px;
+    border: 2px solid #65889e;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.input-field {
+    position: relative;
+}
+
+.input-field i {
+    color: #65889e;
+    ;
+    margin: 0px 1rem;
+    font-size: 25px;
+    width: 25px;
+    top: -15px;
+    position: relative;
+}
+
+.input-field i.fa-pen {
+    top: -40px;
+    position: relative;
+}
+
+.input-field:active {
+    color: #547182;
+}
+
+.input-field input,
+textarea {
+    margin-left: 3rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #65889e;
+    height: 3rem;
+    margin: 0 0 15px 0;
+    transition: all .3s;
+    width: 80%;
+    padding-top: 20px;
+    font-size: 16px;
+}
+
+.input-field textarea {
+    padding: 1.6rem 0;
+    height: 100px;
+}
+
+.input-field label {
+    color: #65889e;
+    position: absolute;
+    left: 1.6rem;
+    cursor: text;
+    margin-left: 3rem;
+}
+
+.btn-block {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.btn-block .btn {
+    text-decoration: none;
+    color: #fff;
+    background-color: #65889e;
+    -webkit-transition: .2s ease-out;
+    transition: .2s ease-out;
+    cursor: pointer;
+    border: none;
+    padding: 10px 35px;
+    font-size: 19px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.btn-block .btn i {
+    float: right;
+    padding-left: 10px;
+    font-size: 16px;
+    padding-top: 3px;
+}
+
+@media (max-width: 400px) {
+    div.form-contact-postulados {
+        width: 90%;
+        padding: 20px 10px;
+    }
+
+    .input-field input,
+    textarea {
+        width: 73%;
+
+    }
+
+    .input-field i {
+        margin: 0px 1rem 0px 0.6rem;
+    }
+
+    input-field label {
+        left: 0.7rem;
+    }
+}
+
+.input-field input[type="text"],
+.input-field input[type="email"] {
+    background-color: rgb(240, 240, 240);
+
+}

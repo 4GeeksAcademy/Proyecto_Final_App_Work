@@ -1,154 +1,73 @@
-.big-singleoffer-container{
-    height: 1200px;
-}
-.card-singleoffer-header{
-    position: relative;
-    left: 220px;
-    bottom: 110px;
+.container-single-offer {
+    display: flex;
+    justify-content: center; /* Centra el contenedor horizontalmente */
+    padding: 0;
+    margin: 0;
 }
 
 .single-offer-box {
-    height: auto;
     width: 100%; 
-    max-width: 60rem; 
-    padding: 10px; 
-    box-shadow: -1px 2px 20px 4px #d4c4c4;
-  }
-.card-single-offer{
-    box-shadow: -1px 2px 20px 4px #d4c4c4;
-}
-.card-SinglOffer-description{
-    position: relative;
-    top: 10px;
-}
-.btn-company{
-    background-color: rgb(175, 206, 225);
-
-}
-.single-rating{
-    position: relative;
-    top: 10px;
-}
-.card-offer-logo img {
-    width: 220px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-.offer-header{
-    position: relative;
-    left: 20px;
-    bottom: 20px;
-    cursor: pointer;
-}
-.localidad-publicacion span{
-   font-size: 1rem;
-   position: relative;
-   bottom: 5px;
-    
+    max-width: 700px; 
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: #fff;
 }
 
-.fecha_publicacion {
-    position: absolute;
-    top: 60px;
-    font-size: 0.85rem;
-    
-
-}
-.fecha_publicacion:hover{
-    text-decoration: underline;
-}
-.companyName-localidad{
-    position: relative;
-    right: 14px;
-    bottom: 5px;
-    font-size: 1rem;
-    color: #167db7;
-    
-}
-
-.companyName-localidad:hover{
-    text-decoration: underline;
-    color: #167db7;
+.single-offer-box img {
+    max-width: 100%;
+    border-radius: 50%;
     cursor: pointer;
 }
 
-.requisits-box{
-    position: relative;
-    bottom: 50px;
-    line-height: 25px;
+.offer-title {
+    font-size: 1.9rem;
+    margin: 0;
 }
 
-.requisit-list{
-    list-style: none;
-    font-size: 0.85rem;
-
+.company-info {
+    color: #007bff;
+    cursor: pointer;
+    margin-bottom: 5px;
 }
 
-.requisits-box h5{
-    font-size: 1.2rem;
-}
-.requisits-box p{
-    position: relative;
-    bottom: 5px;
-}
-.data-header-list{
-    position: relative;
-    left: 220px;
-    bottom: 120px;
-    font-size: 16px;
-    line-height: 30px;
+.date-posted {
+    color: #6c757d;
+    margin-bottom: 10px;
 }
 
-.single-offer-rating{
-    position: relative;
-    top: 20px;
-}
-.data-2{
-    position: relative;
-    left: 150px;
-    
-}
-
-.formacion{
-    font-size: 1rem;
-    
-}
-.experiencia-min  .idiomas  .tipo-contrato{
-    position: relative;
-    bottom: 40px;
+.offer-rating {
+    margin: 5px 0;
 }
 
 .btn-apply {
-    color: black;
-    background-color: rgb(103, 147, 174);
-    min-width: 180px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btn-apply:hover {
-    color: white;
-    background-color: rgb(135, 193, 229);
-}
-
-.btn-apply-top-right {
-    position: absolute;
-    right: 220px;
-    bottom: 65px;
-}
-
-.btn-apply-bottom-left {
-    position: static;
-    left: 20px;
-    bottom: -8px;
-    margin-top: 20px; 
-    display: block;
-}
-.num-postulados-single{
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
     font-size: 0.9rem;
-    text-wrap: nowrap;
+    cursor: pointer;
 }
 
-.num-postulado-single{
-    font-size: 0.9rem;
+.offer-details {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.offer-details li {
+    background-color: #f8f9fa;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.requisitos-minimos {
+    color: #6c757d;
+}
+
+.offer-description {
+    margin-top: 10px;
 }

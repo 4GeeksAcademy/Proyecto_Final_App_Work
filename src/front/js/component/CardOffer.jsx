@@ -3,40 +3,49 @@ import "../../styles/CardOffer.css";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.js";
 import { ModalJobApply } from "./ModalJobApply.jsx";
-import { FaRegHeart, FaHeart } from "react-icons/fa"; 
-import { StarsRating} from "./StarsRating.jsx"
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 export const CardOffer = ({ id }) => {
-    const { actions, store } = useContext(Context);
-    const offer = store.jobOffers.find((offer) => offer.id === id);
     const navigate = useNavigate();
+    const { actions, store } = useContext(Context);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const [modalType, setModalType] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [numeroInscritos, setNumeroInscritos] = useState(0);
-    const [isFavorite, setIsFavorite] = useState(false); 
+    const [isFavorite, setIsFavorite] = useState(false); // Nuevo estado
 
+    const offer = store.jobOffers.find((offer) => offer.id === id);
     if (!offer) return <div>Oferta no encontrada</div>;
+
+    // Función que determina si la oferta es favorita
+    const checkIfFavorite = () => {
+        return store.favorites?.some((fav) => fav.id === id);
+    }
 
     useEffect(() => {
         if (store.user && store.user.profile_programador) {
             const subscribed = store.user.inscribedOffers?.includes(id);
             setIsSubscribed(subscribed);
         }
+
         actions.getNumeroPostulados(id).then((count) => {
             if (count !== null) {
                 setNumeroInscritos(count);
             }
         });
 
-        
-        const favorite = store.favorites?.some((fav) => fav.oferta_id === id);
-        setIsFavorite(favorite);
+        // Verifica si la oferta ya es favorita al cargar el componente
+        setIsFavorite(checkIfFavorite());
+
     }, [store.user, id, actions, store.favorites]);
 
     const handleViewDetails = () => {
         navigate(`/singleoffer/${id}`);
+    };
+
+    const handleViewCompany = () => {
+        navigate(`/Companyview/${id}`);
     };
 
     const formatDate = (dateString) => {
@@ -91,19 +100,28 @@ export const CardOffer = ({ id }) => {
             setIsModalOpen(true);
             return;
         }
-        const programador_id = store.user.profile_programador?.id || null; 
-        const empleador_id = store.user.profile_empleador?.id || null; 
-        const oferta_id = id; 
-    
+        const programador_id = store.user.profile_programador?.id || null;
+        const empleador_id = store.user.profile_empleador?.id || null;
+        const oferta_id = id;
+
         try {
             if (isFavorite) {
-                await actions.removeFavorite(programador_id, empleador_id, oferta_id);
+                const result = await actions.removeFavorite(programador_id, empleador_id, oferta_id);
+                if (result) {
+                    setIsFavorite(false);
+                } else {
+                    throw new Error("No se pudo eliminar de favoritos. Intenta nuevamente.");
+                }
             } else {
-                await actions.addFavorite(programador_id, empleador_id, oferta_id);
+                const result = await actions.addFavorite(programador_id, empleador_id, oferta_id);
+                if (result) {
+                    setIsFavorite(true);
+                } else {
+                    throw new Error("No se pudo agregar a favoritos. Intenta nuevamente.");
+                }
             }
-            setIsFavorite(!isFavorite);
         } catch (error) {
-            setModalMessage("Error al agregar a favoritos. Intente nuevamente.");
+            setModalMessage(error.message);
             setModalType("error");
             setIsModalOpen(true);
         }
@@ -115,71 +133,74 @@ export const CardOffer = ({ id }) => {
 
     return (
         <>
-            <div className="container">
-                <div className="row card-offer mt-2">
-                    <div className="col-2 img-box">
-                        <img
-                            className="card-offer-logo"
-                            src="https://img.freepik.com/vector-premium/concepto-pequena-empresa-fachada-cafeteria-tiendas-ventas_654623-1161.jpg"
-                            alt="Company Logo"
-                        />
-                        <span className="num-postulados text-muted">
-                            ({numeroInscritos}) Se han inscrito
-                        </span>
+            <div className="card-offer mt-2">
+                <div className="card-offer-logo-container col-12 col-md-4 col-lg-3">
+                    <img
+                        className="card-offer-logo img-fluid"
+                        src="https://img.freepik.com/vector-premium/concepto-pequena-empresa-fachada-cafeteria-tiendas-ventas_654623-1161.jpg"
+                        alt="Company Logo"
+                    />
+                    <span className="num-postulados m-2">
+                        {numeroInscritos} Se han inscrito
+                    </span>
+                </div>
+                <div className="card-offer-content ms-3 col-12 col-md-8 col-lg-9">
+                    <div className="title-heart d-flex align-items-center justify-content-between mb-2">
+                        <h2 className="card-offer-title">
+                            {offer.name}
+                        </h2>
+                        <div
+                            onClick={handleFavoriteClick}
+                            className="heart-icon"
+                            style={{ cursor: "pointer" }}
+                        >
+                            {isFavorite ? <FaHeart /> : <FaRegHeart />}
+                        </div>
                     </div>
-                    <div className="col-9 header-box d-flex flex-column">
-                        <div className="title-heart d-flex justify-content-between">
-                            <h2 className="card-offer-title">{offer.name}</h2>
-                            <div onClick={handleFavoriteClick} style={{ cursor: "pointer" }}>
-                                {isFavorite ? (
-                                    <FaHeart className="heart-icon" />
-                                ) : (
-                                    <FaRegHeart className="heart-icon" />
-                                )}
-                            </div>
-                        </div>
-                        <span className="card-offer-company">
-                            {offer.nombre_empresa} - {offer.localidad}
-                        </span>
-                        <StarsRating offerId={id} />
-                        <div className="card-offer-description text-muted">
-                            <p className="text-description">{offer.descripcion}</p>
-                        </div>
-                        <div className="data-footer">
-                            <ul className="card-offer-details d-flex text-muted">
-                                <li className="list-footer-details">
-                                    Publicada el {formatDate(offer.fecha_publicacion)}
-                                </li>
-                                <li className="list-footer-details">
-                                    {offer.modalidad + " | "}
-                                </li>
-                                <li className="list-footer-details mx-2">
-                                    {offer.salario + " | "}
-                                </li>
-                                <li className="list-footer-details">
-                                    {offer.experiencia_minima}
-                                </li>
-                            </ul>
-                            <div className="card-offer-actions">
-                                <button
-                                    onClick={handleViewDetails}
-                                    className="btn btn-details btn-sm text-decoration-none me-3"
-                                >
-                                    Ver detalles
-                                </button>
-                                {!store.user ||
-                                    (store.user && store.user.profile_programador && (
-                                        <button
-                                            className={`btn ${isSubscribed
+                    <span
+                        className="card-offer-company mt-2"
+                        onClick={handleViewCompany}
+                    >
+                        {offer.nombre_empresa} - {offer.localidad}
+                    </span>
+                    <div className="card-offer-description mt-2">
+                        <p className="text-description">{offer.descripcion}</p>
+                    </div>
+                    <div className="data-footer d-flex mt-1">
+                        <ul className="card-offer-details list-unstyled d-flex">
+                            <li className="list-footer-details me-3">
+                                Publicada el {formatDate(offer.fecha_publicacion)}
+                            </li>
+                            <li className="list-footer-details me-3">
+                                {offer.modalidad}
+                            </li>
+                            <li className="list-footer-details me-3">
+                                {offer.salario}
+                            </li>
+                            <li className="list-footer-details">
+                                {offer.experiencia_minima}
+                            </li>
+                        </ul>
+                        <div className="card-offer-actions mt-2">
+                            <button
+                                onClick={handleViewDetails}
+                                className="btn btn-details btn-sm me-3"
+                            >
+                                Ver detalles
+                            </button>
+                            {!store.user ||
+                                (store.user && store.user.profile_programador && (
+                                    <button
+                                        className={`btn ${
+                                            isSubscribed
                                                 ? "btn-desinscribirse"
                                                 : "btn-inscribirse"
-                                                } btn-sm`}
-                                            onClick={handleApplyClick}
-                                        >
-                                            {isSubscribed ? "Desinscribirse" : "Inscribirse"}
-                                        </button>
-                                    ))}
-                            </div>
+                                        } btn-sm`}
+                                        onClick={handleApplyClick}
+                                    >
+                                        {isSubscribed ? "Desinscribirse" : "Inscribirse"}
+                                    </button>
+                                ))}
                         </div>
                     </div>
                 </div>

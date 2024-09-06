@@ -6,21 +6,10 @@
     background-color: #fff;
     transition: box-shadow 0.2s;
     width: 100%;
-    max-width: 815px; 
-    height: 220px; 
+    max-width: 825px;
+    height: auto;
     border-color: #fff 0.5px;
-    overflow: hidden; 
-}
-
-.heart-icon{
-    position: relative;
-    top: 10px;
-    left: 65px;
-    color:  rgb(103, 147, 174);
-    font-size: 1.9rem;
-}
-.heart-icon:hover{
-    color: rgb(135, 193, 229);
+    overflow: hidden;
 }
 
 .card-offer:hover {
@@ -28,31 +17,48 @@
     cursor: pointer;
 }
 
-.card-offer-company{
+.card-offer-logo {
+    width: 120px;
+    max-width: 120px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.card-offer-logo-container {
+    height: fit-content;
+    max-width: 120px;
+}
+
+.heart-icon {
+    position: absolute;
+    right: 10px;
+    color: rgb(103, 147, 174);
+    font-size: 1.9rem;
+}
+
+.heart-icon:hover {
+    color: rgb(135, 193, 229);
+}
+
+.card-offer-company {
     position: relative;
-    bottom: 12px;
-    text-align: start;
+    bottom: 20px;
     font-size: 0.9rem;
     color: #007bff;
 }
 
-.card-offer-company:hover{
+.card-offer-company:hover {
     text-decoration: underline;
 }
 
-.header-box .card-offer-title{
+.header-box .card-offer-title {
     font-size: 1.5rem;
-}
-
-.header-box .fecha-publicacion{
-    position:absolute;
-    right: 10px;
-    font-size: 0.8rem;
 }
 
 .card-offer-description {
     position: relative;
-    bottom: 20px;
+    bottom: 15px;
     font-size: 0.85rem;
     color: #666;
     display: -webkit-box;
@@ -61,63 +67,57 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-height: 3.6em;
+    margin-bottom: 10px;
 }
 
 .text-description {
-    line-height: 1.2em;
+    line-height: 1.5em;
 }
 
-.card-offer-logo{
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 4px;
-    position: relative;
-}
-
-.card-offer-details{
+.card-offer-details {
     list-style: none;
-    font-size: 0.9rem;
-    margin: 0; 
+    font-size: 0.8rem;
+    margin: 0;
     padding: 0;
-    display: flex;
     align-items: center;
 }
 
-.data-footer{
+.data-footer {
     display: flex;
     justify-content: space-between;
-    align-items: center; 
-    margin-top: auto; 
-    padding: 10px 0; 
+    align-items: center;
+    margin-top: auto;
+    padding: 10px 0;
 }
-.card-offer-details li{
+
+.card-offer-details li {
     position: relative;
     top: 10px;
 }
+
 .card-offer-details .list-footer-details:first-child {
     position: relative;
     right: 130px;
     list-style: none;
     font-size: 0.9rem;
-    margin: 0; 
+    margin: 0;
     padding: 0;
     display: flex;
-    align-items: center; 
-
+    align-items: center;
 }
 
-.card-offer-details .list-footer-details:nth-child(3){
+.card-offer-details .list-footer-details:nth-child(3) {
     font-size: 0.85rem;
-
 }
-.card-offer-actions{
+
+.card-offer-actions {
     display: flex;
-    gap: 10px; 
-    margin-top: 10px; 
+    gap: 10px;
+    margin-top: 10px;
     font-size: 0.85rem;
 }
-.card-offer-actions .btn-details{
+
+.card-offer-actions .btn-details {
     position: relative;
     left: 70px;
     background-color: rgb(103, 147, 174);
@@ -125,7 +125,6 @@
     padding: 4px 8px;
     border-radius: 4px;
     border: none;
-
 }
 
 .card-offer-actions .btn-inscribirse,
@@ -138,15 +137,15 @@
     border-radius: 4px;
     border: none;
 }
+
 .card-offer-actions .btn-details:hover,
 .card-offer-actions .btn-inscribirse:hover,
 .card-offer-actions .btn-desinscribirse:hover {
     color: white;
     background-color: rgb(135, 193, 229);
 }
-.num-postulados{
+
+.num-postulados {
     font-size: 0.75rem;
-    text-wrap: nowrap;
+    white-space: nowrap;
 }
-
-

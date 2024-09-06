@@ -1,30 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { Context } from '../../store/appContext';
+
 
 export const EditUserPhone = ({ increaseProgress }) => {
-    const [UserPhone, setUserPhone] = useState('Numero de telefono');
-    const [showModal, setShowModal] = useState(false);
-    const [newUserPhone, setNewUserPhone] = useState(UserPhone);
-
+    const { store, actions } = useContext(Context);
+    const [showModal, setShowModal] = useState(false); 
+    const [newPhone, setNewPhone] = useState(''); 
+    
+    useEffect(() => {
+        const fetchCompanyPhone = async () => {
+            try {
+                const response = await actions.getCompanyPhone();
+                if (response) {
+                    setNewPhone(response);
+                }
+            } catch (error) {
+                console.error("Error al obtener el telefono de la empresa:", error);
+            }
+        };
+        fetchCompanyPhone();
+    }, [actions.getCompanyPhone]); 
+    
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
-
-    const handleSave = (e) => {
+    
+    const handleSave = async (e) => {
         e.preventDefault();
-        setUserPhone(newUserPhone);
-        handleClose();
-        increaseProgress(10);
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleSave(e);
+        if (!newPhone.trim()) {
+            console.error("El telefono de la empresa no puede estar vacío.");
+            return;
+        }
+        try {
+            const response = await actions.updateCompanyPhone(newPhone);
+            if (response) {
+                increaseProgress(10);
+            } else {
+                console.error("Error al actualizar el telefono de la empresa");
+            }
+        } catch (error) {
+            console.error("Error al guardar el telefono de la empresa:", error);
+        } finally {
+            handleClose();
         }
     };
-
+    
     return (
         <>
             <div className="d-flex align-items-center" style={{
@@ -36,7 +58,7 @@ export const EditUserPhone = ({ increaseProgress }) => {
                         icon={faPhone}
                         style={{ color: '#6793AE', width: '25px', height: '25px', marginRight: '10px' }}
                     />
-                    {UserPhone}
+                    {store.user?.phone}
                 </p>
 
                 <button
@@ -45,22 +67,21 @@ export const EditUserPhone = ({ increaseProgress }) => {
                     style={{ width: 25, height: 25, backgroundColor: 'rgba(103, 147, 174, 1)', boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
                     onClick={handleShow}
                 >
-                    <FontAwesomeIcon icon={faEdit}  style={{width: '15px', height: '15px',}}/>
+                    <FontAwesomeIcon icon={faEdit} style={{ width: '15px', height: '15px' }} />
                 </button>
             </div>
-
             <Modal show={showModal} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Editar Teléfono </Modal.Title>
+                    <Modal.Title>Editar el Teléfono de la Empresa</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onKeyDown={handleKeyDown} onSubmit={handleSave}>
-                        <Form.Group controlId="formUserPhone">
+                    <Form onSubmit={handleSave}>
+                        <Form.Group controlId="formPhone">
                             <Form.Control
                                 type="text"
                                 className="form-control"
-                                value={newUserPhone}
-                                onChange={(e) => setNewUserPhone(e.target.value)}
+                                value={newPhone}
+                                onChange={(e) => setNewPhone(e.target.value)}
                                 placeholder="Número de teléfono"
                             />
                         </Form.Group>

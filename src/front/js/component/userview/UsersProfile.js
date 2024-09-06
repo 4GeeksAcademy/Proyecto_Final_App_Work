@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfileImage from '../ProfileImage';
+import {ProfileImage} from '../ProfileImage';
 import { UserNameEdit } from './EditUserName';
 import { EditUserPhone } from './EditUserPhone';
 import { EditUserMail } from './EditUserMail';

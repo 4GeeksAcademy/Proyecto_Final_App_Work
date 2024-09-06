@@ -1,10 +1,11 @@
 .FilterListOffer-box {
     position: absolute;
-    top: 325px;
+    top: 375px;
+    left: 5px;
     border: 1px solid rgb(103, 147, 174);;
     border-radius: 4px;
     color: rgb(143, 172, 190);
-    width: 17%;
+    width: 15%;
     height: fit-content;
     overflow: hidden;
     opacity: 0.85; 

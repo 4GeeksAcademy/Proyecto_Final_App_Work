@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/FilterListOffer.css";
 
-export const FilterListOffer = ({ onFilterChange }) => {
-    const [filters, setFilters] = useState({
-        plazo: "",
-        salario: [0, 100000],
-        searchText: "",
-        fecha_publicacion: "",
-        experience: []
-    });
+export const FilterListOffer = ({ filters, handleFiltersChange }) => {
+    const [localFilters, setLocalFilters] = useState(filters);
 
-    // Este useEffect se ejecuta cuando filters cambia, para notificar al componente padre
+    // Este useEffect se ejecuta cuando localFilters cambia, para notificar al componente padre
     useEffect(() => {
-        onFilterChange(filters);
-    }, [filters, onFilterChange]);
+        handleFiltersChange(localFilters);
+    }, [localFilters, handleFiltersChange]);
 
     const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
 
-        setFilters((prevFilters) => {
+        setLocalFilters((prevFilters) => {
             const newExperience = checked
                 ? [...prevFilters.experience, value]
                 : prevFilters.experience.filter((item) => item !== value);
@@ -33,7 +27,7 @@ export const FilterListOffer = ({ onFilterChange }) => {
     const handleInputChange = (event) => {
         const { name, value } = event.target;
 
-        setFilters((prevFilters) => ({
+        setLocalFilters((prevFilters) => ({
             ...prevFilters,
             [name]: value
         }));
@@ -41,11 +35,12 @@ export const FilterListOffer = ({ onFilterChange }) => {
 
     const handleSalaryChange = (event) => {
         const [min, max] = event.target.value.split(',').map(Number);
-        setFilters((prevFilters) => ({
+        setLocalFilters((prevFilters) => ({
             ...prevFilters,
             salario: [min, max]
         }));
     };
+
 
     return (
         <div className="FilterListOffer-box p-3 ms-5 shadow-lg">

@@ -1,33 +1,35 @@
 from flask_sqlalchemy import SQLAlchemy
 from enum import Enum
 
-
 db = SQLAlchemy()
 
 class Postulados(db.Model):
-    __tablename__="postulados"
-    user_id= db.Column (db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    oferta_id = db.Column (db.Integer, db.ForeignKey("ofertas.id"), primary_key=True)
-    
+    __tablename__ = "postulados"
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    oferta_id = db.Column(db.Integer, db.ForeignKey("ofertas.id"), primary_key=True)
+    estado = db.Column(db.String(20), nullable=False, default='pendiente')
 
     def __repr__(self):
-        return f'<Postulados {self.user_id}>'
-    
+        return f'<Postulados {self.user_id} - {self.oferta_id}>'
 
     def serialize(self):
+        user = User.query.get(self.user_id)
         return {
             "user_id": self.user_id,
-            "oferta_id": self.oferta_id
-
+            "oferta_id": self.oferta_id,
+            "email": user.email,
+            "username": user.username,
+            "programador": user.profile_programador.serialize() if user.profile_programador else None,
+            "estado": self.estado,
         }
-    
+
+
 class Ratings(db.Model):
-    __tablename__="ratings"
+    __tablename__ = "ratings"
     id = db.Column(db.Integer, primary_key=True)
-    from_id = db.Column (db.Integer, db.ForeignKey ("empleador.id"), primary_key=True)
-    to_id = db.Column (db.Integer, db.ForeignKey ("programador.id"), primary_key=True)
+    programador_id = db.Column(db.Integer, db.ForeignKey("programador.id"))
+    empleador_id = db.Column(db.Integer, db.ForeignKey("empleador.id"))
     value = db.Column(db.Integer)
-    
 
     def __repr__(self):
         return f'<Ratings {self.id}>'
@@ -35,12 +37,12 @@ class Ratings(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "from_id": self.from_id,
-            "to_id": self.to_id,
+            "programador_id": self.programador_id,
+            "empleador_id": self.empleador_id,
             "value": self.value
         }
 
-        
+
 class Favoritos(db.Model):
     __tablename__ = "favoritos"
     id = db.Column(db.Integer, primary_key=True)
@@ -58,19 +60,24 @@ class Favoritos(db.Model):
             "oferta_id": self.oferta_id
         }
 
-    
+
 class User(db.Model):
-    __tablename__="user"
+    __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column (db.String (20), nullable=False)
-    username = db.Column (db.String(50), nullable=False)
-    photo = db.Column (db.String(200))
+    name = db.Column(db.String(20), nullable=False)
+    username = db.Column(db.String(50), nullable=False)
+    photo = db.Column(db.String(200))
+    phone = db.Column(db.String(30))
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     country = db.Column (db.String (20), unique=False, nullable=False)
     profile_programador = db.relationship ("Programador", backref="user", uselist=False)
     profile_empleador = db.relationship ("Empleador", backref="user", uselist=False)
     postulados= db.relationship ("Postulados", backref= "user", lazy=True)
+    description = db.Column(db.String(500))
+    skills = db.relationship('Skills', backref='user', lazy=True)
+    price = db.Column(db.Float, nullable=True)  
+    currency = db.Column(db.String(3), nullable=True)
    
 
     def __repr__(self):
@@ -84,11 +91,14 @@ class User(db.Model):
             "username": self.username,
             "photo": self.photo,
             "country": self.country,
+            "phone": self.phone,
             "profile_programador": self.profile_programador.serialize() if self.profile_programador else None,
             "profile_empleador": self.profile_empleador.serialize()  if self.profile_empleador else None,
-            "postulados": [postulados.serialize() for postulados in self.postulados] if self.postulados else None
+            "postulados": [postulados.serialize() for postulados in self.postulados] if self.postulados else None,
+            "description": self.description,
+            "price": self.price,  
+            "currency": self.currency,
         }
-    
 
 
 class Experience(Enum):
@@ -96,19 +106,19 @@ class Experience(Enum):
     MID = 'mid-level'
     SENIOR = 'senior'
 
+
 class Programador(db.Model):
-    __tablename__="programador"
+    __tablename__ = "programador"
     id = db.Column(db.Integer, primary_key=True)
-    precio_hora = db.Column (db.Integer)
-    tecnologias = db.Column (db.String(200))
+    precio_hora = db.Column(db.Integer)
+    tecnologias = db.Column(db.String(200))
     experiencia = db.Column(db.Enum(Experience))
     descripcion = db.Column(db.String(300))
-    rating = db.Column (db.Float(2))
-    proyectos = db.relationship ("Proyectos", backref="programador", lazy=True)
-    user_id= db.Column (db.Integer, db.ForeignKey("user.id"), nullable=False)
-    rating = db.relationship ("Ratings", backref="programador", lazy=True)
+    rating_value = db.Column(db.Float(2))
+    proyectos = db.relationship("Proyectos", backref="programador", lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    ratings = db.relationship("Ratings", backref="programador", lazy=True)
     favoritos = db.relationship("Favoritos", backref="programador", lazy=True)
-
 
     def __repr__(self):
         return f'<Programador {self.id}>'
@@ -120,23 +130,23 @@ class Programador(db.Model):
             "tecnologias": self.tecnologias,
             "experiencia": self.experiencia.value if self.experiencia else None,
             "descripcion": self.descripcion,
-            "rating": self.rating,
-            "proyectos": [proyectos.serialize()for proyectos in self.proyectos],
-            "favoritos": [favoritos.serialize() for favoritos in self.favoritos] if self.favoritos else None
+            "rating_value": self.rating_value,
+            "proyectos": [proyecto.serialize() for proyecto in self.proyectos],
+            "favoritos": [favorito.serialize() for favorito in self.favoritos] if self.favoritos else None
         }
+
 
 class Empleador(db.Model):
     __tablename__ = "empleador"
     id = db.Column(db.Integer, primary_key=True)
-    cif = db.Column (db.String(15), unique=True)
-    metodo_pago = db.Column (db.String(100))
+    cif = db.Column(db.String(15), unique=True)
+    metodo_pago = db.Column(db.String(100))
     descripcion = db.Column(db.String(300))
-    premium = db.Column(db.Boolean ,default=False)
-    user_id= db.Column (db.Integer, db.ForeignKey("user.id"), nullable=False)
-    rating = db.relationship ("Ratings", backref="empleador", lazy=True)
-    favoritos = db.relationship ("Favoritos", backref="empleador", lazy=True)
-    oferta = db.relationship ("Ofertas", backref="empleador", lazy=True)
-    
+    premium = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    ratings = db.relationship("Ratings", backref="empleador", lazy=True)
+    favoritos = db.relationship("Favoritos", backref="empleador", lazy=True)
+    ofertas = db.relationship("Ofertas", backref="empleador", lazy=True)
 
     def __repr__(self):
         return f'<Empleador {self.id}>'
@@ -148,24 +158,23 @@ class Empleador(db.Model):
             "metodo_pago": self.metodo_pago,
             "descripcion": self.descripcion,
             "premium": self.premium,
-            "favoritos": [favoritos.serialize() for favoritos in self.favoritos]  if self.favoritos else None
+            "favoritos": [favorito.serialize() for favorito in self.favoritos] if self.favoritos else None
         }
-    
-
 
 
 class Modalidad(Enum):
     TELETRABAJO = 'teletrabajo'
     PRESENCIAL = 'presencial'
     HYBRIDO = 'hybrido'
-    
+
+
 class Ofertas(db.Model):
-    __tablename__="ofertas"
+    __tablename__ = "ofertas"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column (db.String (100), nullable=False)
-    nombre_empresa = db.Column (db.String(100), nullable=False)
-    descripcion = db.Column (db.String(), nullable=False)
-    salario = db.Column (db.String(20))
+    name = db.Column(db.String(100), nullable=False)
+    nombre_empresa = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.String(), nullable=False)
+    salario = db.Column(db.String(20))
     localidad = db.Column(db.String(30), nullable=False)
     requisitos_minimos = db.Column(db.String(400), nullable=False)
     horario = db.Column(db.String(100))
@@ -174,12 +183,11 @@ class Ofertas(db.Model):
     idiomas = db.Column(db.String(30))
     plazo = db.Column(db.String(100), nullable=False)
     modalidad = db.Column(db.Enum(Modalidad), nullable=False)
-    experiencia_minima = db.Column (db.Enum(Experience), nullable=False)
+    experiencia_minima = db.Column(db.Enum(Experience), nullable=False)
     fecha_publicacion = db.Column(db.Date, nullable=False)
-    postulados= db.relationship ("Postulados", backref= "ofertas", lazy=True)
-    favoritos = db.relationship ("Favoritos", backref="ofertas", lazy=True)
-    empleador_id = db.Column (db.Integer, db.ForeignKey ("empleador.id"))
-   
+    postulados = db.relationship("Postulados", backref="ofertas", lazy=True)
+    favoritos = db.relationship("Favoritos", backref="ofertas", lazy=True)
+    empleador_id = db.Column(db.Integer, db.ForeignKey("empleador.id"))
 
     def __repr__(self):
         return f'<Ofertas {self.id}>'
@@ -202,23 +210,24 @@ class Ofertas(db.Model):
             "experiencia_minima": self.experiencia_minima.value,
             "fecha_publicacion": self.fecha_publicacion.isoformat(),
             "empleador_id": self.empleador_id,
-            "favoritos": [favoritos.serialize() for favoritos in self.favoritos] if self.favoritos else None
+            "postulados": [postulado.serialize() for postulado in self.postulados] if self.postulados else None,
+            "favoritos": [favorito.serialize() for favorito in self.favoritos] if self.favoritos else None,
+            "premium":  self.empleador.premium if self.empleador else None
         }
-    
+
 
 class Proyectos(db.Model):
-    __tablename__="proyectos"
+    __tablename__ = "proyectos"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), unique=True, nullable=False)
+    name = db.Column(db.String(200), nullable=False)
     descripcion_corta = db.Column(db.String(150), nullable=False)
     git = db.Column(db.String(300))
     link = db.Column(db.String(500))
-    tecnologias = db.Column (db.String(200), nullable=False)
-    programador_id = db.Column (db.Integer, db.ForeignKey ("programador.id"))
-    
+    tecnologias = db.Column(db.String(200), nullable=False)
+    programador_id = db.Column(db.Integer, db.ForeignKey("programador.id"))
 
     def __repr__(self):
-        return f'<Programador {self.id}>'
+        return f'<Proyectos {self.id}>'
 
     def serialize(self):
         return {
@@ -236,7 +245,7 @@ class Contact(db.Model):
     __tablename__ = "contact"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
-    lastName = db.Column(db.String(50), nullable=False)  
+    lastName = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     message = db.Column(db.String(1000), nullable=False)
     privacy_policy_accepted = db.Column(db.Boolean, nullable=False, default=False)
@@ -253,3 +262,25 @@ class Contact(db.Model):
             "message": self.message,
             "privacy_policy_accepted": self.privacy_policy_accepted
         }
+    
+class Skills(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    language = db.Column(db.String(120), nullable=False)
+    experience = db.Column(db.String(120), nullable=False)
+    projects = db.Column(db.Integer, nullable=False)
+    certificate_name = db.Column(db.String(255), nullable=True)
+    certificate_link = db.Column(db.String(255), nullable=True)
+    icon = db.Column(db.String(255), nullable=False)
+
+
+    def serialize(self):
+        return {
+            'language': self.language,
+            'experience': self.experience,
+            'projects': self.projects,
+            'certificateName': self.certificate_name,
+            'certificateLink': self.certificate_link,
+            'icon': self.icon
+        }
+

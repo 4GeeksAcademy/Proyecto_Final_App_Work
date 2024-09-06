@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 66386b1dc2af
+Revision ID: f0feefbbff24
 Revises: 
-Create Date: 2024-09-02 11:42:13.907592
+Create Date: 2024-09-06 14:41:43.571216
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '66386b1dc2af'
+revision = 'f0feefbbff24'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,6 +32,7 @@ def upgrade():
     sa.Column('name', sa.String(length=20), nullable=False),
     sa.Column('username', sa.String(length=50), nullable=False),
     sa.Column('photo', sa.String(length=200), nullable=True),
+    sa.Column('phone', sa.String(length=30), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password', sa.String(length=80), nullable=False),
     sa.Column('country', sa.String(length=20), nullable=False),
@@ -55,6 +56,7 @@ def upgrade():
     sa.Column('tecnologias', sa.String(length=200), nullable=True),
     sa.Column('experiencia', sa.Enum('JUNIOR', 'MID', 'SENIOR', name='experience'), nullable=True),
     sa.Column('descripcion', sa.String(length=300), nullable=True),
+    sa.Column('rating_value', sa.Float(precision=2), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -88,17 +90,16 @@ def upgrade():
     sa.Column('tecnologias', sa.String(length=200), nullable=False),
     sa.Column('programador_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['programador_id'], ['programador.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('ratings',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('from_id', sa.Integer(), nullable=False),
-    sa.Column('to_id', sa.Integer(), nullable=False),
+    sa.Column('programador_id', sa.Integer(), nullable=True),
+    sa.Column('empleador_id', sa.Integer(), nullable=True),
     sa.Column('value', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['from_id'], ['empleador.id'], ),
-    sa.ForeignKeyConstraint(['to_id'], ['programador.id'], ),
-    sa.PrimaryKeyConstraint('id', 'from_id', 'to_id')
+    sa.ForeignKeyConstraint(['empleador_id'], ['empleador.id'], ),
+    sa.ForeignKeyConstraint(['programador_id'], ['programador.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('favoritos',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -113,6 +114,7 @@ def upgrade():
     op.create_table('postulados',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('oferta_id', sa.Integer(), nullable=False),
+    sa.Column('estado', sa.String(length=20), nullable=False),
     sa.ForeignKeyConstraint(['oferta_id'], ['ofertas.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('user_id', 'oferta_id')

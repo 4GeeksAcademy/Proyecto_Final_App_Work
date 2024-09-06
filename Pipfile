@@ -21,6 +21,7 @@ typing-extensions = "*"
 flask-bcrypt = "*"
 flask-jwt-extended = "*"
 stripe = "*"
+alembic = "*"
 
 [requires]
 python_version = "3.10"

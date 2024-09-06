@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import logo from "../../img/LOOPY.png"
+
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -14,15 +16,12 @@ export const Navbar = () => {
     <nav className="navbar" style={{ backgroundColor: "#6793AE", height: "120px" }}>
       <div className="container-fluid">
         <Link to={""} className="navbar-brand">
-          <img
-            src="/docs/5.3/assets/brand/bootstrap-logo.svg"
-            alt="Bootstrap"
-            width="30"
-            height="24"
-          />
+        <img src={logo} alt="Logo" width="100px" height="auto" />
+
+
         </Link>
 
-        <div className="navbar navbar-expand-lg ms-auto">
+        <div className="navbar navbar-expand-sm ms-auto">
           <div className="container-fluid">
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
               <div className="navbar-nav me-auto">
@@ -68,18 +67,7 @@ export const Navbar = () => {
                     >
                       PERFIL
                     </Link>
-                    <button
-                      type="button"
-                      className="btn rounded-pill me-4 pe-none"
-                      style={{
-                        backgroundColor: "#70879C",
-                        borderColor: "white",
-                        color: "white",
-                      }}
-                    >
-                      Suscripción: {store.user.profile_empleador.premium ? "Premium" : "Free"}
-                    </button>
-                  </>
+                    </>
                 )}
 
                 {store.user ? (
@@ -92,6 +80,20 @@ export const Navbar = () => {
                       FAVORITOS
 
                     </Link>
+                    {store.user.profile_empleador && (
+                       <button
+                       type="button"
+                       className="btn rounded-pill me-4 pe-none"
+                       style={{
+                         backgroundColor: "#70879C",
+                         borderColor: "white",
+                         color: "white",
+                       }}
+                     >
+                       Suscripción: {store.user.profile_empleador.premium ? "Premium" : "Free"}
+                     </button>
+                   
+                    )}
 
                     <button
                       type="button"

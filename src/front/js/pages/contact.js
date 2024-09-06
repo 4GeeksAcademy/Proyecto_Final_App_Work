@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import "../../styles/contact.css"; 
+import React, { useState, useRef } from "react";
+import "../../styles/contact.css";
 
 
 export const Contact = () => {
+  const form = useRef();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -24,14 +25,15 @@ export const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!formData.name || !formData.lastName || !formData.email || !formData.message || !formData.privacyPolicyAccepted) {
       setSubmissionStatus("Todos los campos son obligatorios y debes aceptar la política de privacidad.");
       return;
     }
 
+
     try {
-      const response = await fetch(process.env.BACKEND_URL+"/api/contact", {
+      const response = await fetch(process.env.BACKEND_URL + "/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +41,21 @@ export const Contact = () => {
         body: JSON.stringify(formData),
       });
 
+
+
       if (response.ok) {
+        emailjs
+          .sendForm(process.env.EMAIL_SERVICE_ID, process.env.EMAIL_TEMPLATE_ID, form.current,
+            process.env.EMAIL_USER_ID
+          )
+          .then(
+            () => {
+              console.log('SUCCESS!');
+            },
+            (error) => {
+              console.log('FAILED...', error.text);
+            },
+          );
         setSubmissionStatus("Mensaje enviado con éxito.");
         setFormData({ name: "", lastName: "", email: "", message: "", privacyPolicyAccepted: false });
       } else {
@@ -51,7 +67,7 @@ export const Contact = () => {
   };
 
   return (
-    <div className="container-contact">
+    <div className="container-contact contenedor">
       <section className="contact-section text-center mt-5">
         <h2 style={{ color: "#6793AE" }} className="fw-bold">
           Contáctanos
@@ -59,7 +75,7 @@ export const Contact = () => {
         <p className="text-secondary mt-3">
           ¿Tienes alguna pregunta o estás interesado en nuestros servicios? ¡Estamos aquí para ayudarte! Completa el siguiente formulario y nos pondremos en contacto contigo lo antes posible.
         </p>
-      
+
         <div className="contact-info">
           <p>
             <i className="fas fa-phone-alt"></i> <div className="text-secondary"><strong>Teléfono: </strong> +34 123 456 789</div>
@@ -74,8 +90,8 @@ export const Contact = () => {
       </section>
 
       <section className="contact-form-section">
-        <form className="row g-3 justify-content-center" onSubmit={handleSubmit}>
-          
+        <form ref={form} className="row g-3 justify-content-center" onSubmit={handleSubmit}>
+
           <div className="col-6">
             <label htmlFor="name" className="form-label">
               Nombre
@@ -83,6 +99,7 @@ export const Contact = () => {
             <input
               type="text"
               className="form-control"
+              name="name"
               id="name"
               placeholder="Ingresa tu nombre"
               value={formData.name}
@@ -98,6 +115,7 @@ export const Contact = () => {
               type="text"
               className="form-control"
               id="lastName"
+              name="lastName"
               placeholder="Ingresa tu apellido"
               value={formData.lastName}
               onChange={handleChange}
@@ -112,6 +130,7 @@ export const Contact = () => {
               type="email"
               className="form-control"
               id="email"
+              name="email"
               placeholder="correo@ejemplo.com"
               value={formData.email}
               onChange={handleChange}
@@ -125,6 +144,7 @@ export const Contact = () => {
             <textarea
               className="form-control"
               id="message"
+              name="message"
               aria-label="Mensaje"
               style={{ height: "150px" }}
               placeholder="Describe cómo podemos ayudarte"
@@ -156,7 +176,10 @@ export const Contact = () => {
 
           {submissionStatus && (
             <div className="col-md-10 text-center mt-3">
-              <p>{submissionStatus}</p>
+              <div class="alert alert-success" role="alert">
+                {submissionStatus}
+              </div>
+
             </div>
           )}
         </form>

@@ -1,0 +1,109 @@
+/* Estilos generales */
+.favorites-body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    width: 100%;      
+    display: flex;
+    margin-bottom: 20px; 
+    justify-content: center;
+}
+
+.search-bar .form-control {
+    flex-grow: 1;
+    border-radius: 4px 0 0 4px;
+}
+
+.btn-search {
+    background-color: rgb(103, 147, 174);
+    color: black;
+    padding: 5px 11px;
+    height: 100%;
+    width: 100px;
+    border-radius: 0 4px 4px 0;
+}
+
+.btn-search:hover {
+    background-color: rgb(135, 193, 229);
+    color: aliceblue;
+}
+
+/* Títulos de la cabecera */
+.header-box h3{
+    color: rgb(103, 147, 174);
+    font-size: 1.8rem;
+}
+
+.header-box h2{
+    font-size: 3rem;
+}
+
+/* Contenedor principal */
+.favorites-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 10px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 2px solid #6793AE; 
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Título de la página */
+.favorites-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #6793AE;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* Fila de favoritos */
+.favorites-row {
+    display: flex;
+    flex-direction: column; /* Cambia la dirección para que las tarjetas se alineen verticalmente */
+    align-items: center; /* Centra las tarjetas horizontalmente */
+    gap: 20px;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+}
+
+/* Tarjetas de oferta favoritas */
+.favorites-card-offer {
+    width: 100%; /* Haz que cada tarjeta ocupe el 100% del ancho disponible */
+    max-width: 800px; /* Ajusta este valor para que las tarjetas no sean demasiado grandes */
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    
+}
+
+/* Estilos para cuando no hay ofertas favoritas */
+.favorites-no-favorites {
+    font-size: 18px;
+    color: #999;
+    text-align: center;
+    margin-top: 50px;
+}
+
+/* Adaptación para pantallas pequeñas */
+@media (max-width: 768px) {
+    .favorites-container {
+        padding: 10px;
+    }
+
+    .favorites-title {
+        font-size: 28px;
+    }
+
+    .favorites-card-offer {
+        max-width: 100%; /* Asegura que las tarjetas ocupen todo el ancho en pantallas pequeñas */
+    }
+}

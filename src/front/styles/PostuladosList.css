@@ -1,0 +1,46 @@
+.postulados-header {
+    font-size: 3.5rem;
+    color: rgba(33, 37, 41, 0.75);
+    text-shadow: 5px 5px 15px #909090;
+    text-wrap: nowrap;
+}
+
+.card-box {
+    width: 80%;
+}
+
+.postulados-box-header p {
+    font-size: 2rem;
+    color: rgb(103, 147, 174);
+    text-shadow: 5px 5px 15px #909090;
+}
+
+.postulados-card-text {
+    font-weight: bold;
+    color: #4c4b4b;
+}
+
+.color-title-postulado {
+    color: rgb(103, 147, 174);
+}
+
+.postulados-header {
+    color: #4c4b4b;
+}
+
+
+.boton-contactar {
+    width: 100%;
+    background-color: #6793AE;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    padding: 5px 0;
+
+}
+
+.boton-contactar:hover {
+    background-color: #557589;
+    font-size: larger;
+    font-weight: 500;
+}

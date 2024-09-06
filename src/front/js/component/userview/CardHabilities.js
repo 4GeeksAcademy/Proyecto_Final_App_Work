@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { FaUpload } from 'react-icons/fa'; 
+import { FaUpload } from 'react-icons/fa';
 
 
 const SkillRow = ({ skill }) => {
@@ -27,7 +27,7 @@ const SkillRow = ({ skill }) => {
 
 const SkillsTable = () => {
     const [skills, setSkills] = useState([
-        
+
     ]);
 
     const [showModal, setShowModal] = useState(false);
@@ -35,7 +35,7 @@ const SkillsTable = () => {
         language: '',
         icon: '',
         experience: '',
-        projects: 0,
+        projects: '',
         certificateName: '',
         certificateLink: '#',
     });
@@ -48,7 +48,7 @@ const SkillsTable = () => {
             return;
         }
 
-        
+
         let iconUrl = '';
         switch (newSkill.language) {
             case 'JavaScript':
@@ -67,10 +67,10 @@ const SkillsTable = () => {
                 break;
         }
 
-        
+
         setSkills([...skills, { ...newSkill, icon: iconUrl }]);
 
-       
+
         setNewSkill({ language: '', experience: '', projects: 0, certificateName: '', certificateLink: '#', icon: '' });
         setShowModal(false);
     };
@@ -107,7 +107,7 @@ const SkillsTable = () => {
                 </table>
             </div>
 
-            
+
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Añadir Nueva Habilidad</Modal.Title>
@@ -176,6 +176,5 @@ const SkillsTable = () => {
 };
 
 export default SkillsTable;
-
 
 

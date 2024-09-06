@@ -1,0 +1,150 @@
+.card-offer-premium {
+    position: relative;
+    display: flex;
+    padding: 5px;
+    border: 1px solid  rgb(103, 147, 174);
+    color: rgb(59, 58, 58);
+    border-radius: 4px;
+    transition: box-shadow 0.2s;
+    width: 100%;
+    max-width: 825px; 
+    background-color: rgba(78, 111, 158, 0.071);
+    height: auto;
+    border-color: #fff 0.5px;
+    overflow: hidden;
+    
+}
+.card-offer-premium:hover {
+    box-shadow: 0 4px 8px rgb(135, 193, 229);
+    cursor: pointer;
+}
+
+.card-offer-logo-premium {
+    width: 100%; 
+    max-width: 120px; 
+    height: auto; 
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.card-offer-logo-premium-container{
+    height: fit-content;
+    max-width: 120px;
+}
+
+.heart-icon-premium {
+    position: absolute; 
+    right: 10px; 
+    color: gold;
+    font-size: 1.9rem;
+}
+
+.heart-icon-premium:hover {
+    color: gold
+}
+
+.card-offer-company-premium {
+    position: relative;
+    bottom: 20px;
+    font-size: 0.9rem;
+    color: #007bff;
+}
+
+.card-offer-company-premium:hover {
+    text-decoration: underline;
+}
+
+.card-offer-description-premium {
+    position: relative;
+    bottom: 15px;
+    font-size: 0.85rem;
+    color: #666;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3.6em;
+    margin-bottom: 10px; 
+}
+
+.text-description-premium {
+    line-height: 1.2em;
+}
+.card-offer-details-premium{
+    list-style: none;
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+.data-footer-premium{
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    margin-top: auto; 
+    padding: 10px 0; 
+}
+
+.card-offer-details-premium li{
+    position: relative;
+    top: 10px;
+}
+.card-offer-details-premium .list-footer-details-premium:first-child {
+    position: relative;
+    right: 130px;
+    list-style: none;
+    font-size: 0.9rem;
+    margin: 0; 
+    padding: 0;
+    display: flex;
+    align-items: center; 
+}
+
+.card-offer-details-premium .list-footer-details-premium:nth-child(3) {
+    font-size: 0.8rem;
+}
+
+
+
+.card-offer-actions-premium {
+    display: flex;
+    gap: 10px; 
+    margin-top: 10px; 
+    font-size: 0.85rem;
+}
+
+.card-offer-actions-premium .btn-details-premium {
+    position: relative;
+    left: 70px;
+    background-color: rgb(103, 147, 174);
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: none;
+}
+
+.card-offer-actions-premium .btn-inscribirse-premium,
+.card-offer-actions-premium .btn-desinscribirse-premium {
+    position: relative;
+    left: 50px;
+    background-color: rgb(103, 147, 174);
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: none;
+}
+
+.card-offer-actions-premium:hover .btn-details-premium:hover,
+.card-offer-actions-premium:hover .btn-inscribirse-premium:hover,
+.card-offer-actions-premium:hover .btn-desinscribirse-premium:hover {
+    color: white;
+    background-color: rgb(135, 193, 229);
+}
+
+
+
+.num-postulados-premium {
+    font-size: 0.75rem;
+    white-space: nowrap; 
+}

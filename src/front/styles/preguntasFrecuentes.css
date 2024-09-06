@@ -1,8 +1,8 @@
-.colorFondoGeneral{
+.colorFondoGeneral {
     background: #6793AE;
 }
 
-.colorGeneral{
+.colorGeneral {
     color: #6793AE;
 }
 
@@ -14,11 +14,11 @@
 }
 
 .fuente {
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 
-.banner-preguntas{
+.banner-preguntas {
     color: white;
     margin: 3rem 0;
     height: 12rem;
@@ -27,15 +27,14 @@
 .icons-style {
     font-size: 4rem;
     display: flex;
-    justify-content:space-evenly;
-    
+    justify-content: space-evenly;
+
 }
 
-.borde{
+.borde {
     border-right: 1px solid white;
 }
 
-
-
-
-
+.contenedor {
+    min-height: 80rem;
+}

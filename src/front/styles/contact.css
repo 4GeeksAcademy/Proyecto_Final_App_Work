@@ -96,3 +96,7 @@
 .contact-form-section form .btn:hover {
     background-color: #50758a;
 }
+
+.contenedor {
+    min-height: 80rem;
+}

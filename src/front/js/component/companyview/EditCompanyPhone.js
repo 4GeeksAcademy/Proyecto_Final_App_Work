@@ -1,52 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { Context } from '../../store/appContext';
 
 export const EditCompanyPhone = ({ increaseProgress }) => {
-    const [companyPhone, setCompanyPhone] = useState('Numero de telefono');
-    const [showModal, setShowModal] = useState(false);
-    const [newPhone, setNewPhone] = useState(companyPhone);
-
+    const { store, actions } = useContext(Context);
+    const [showModal, setShowModal] = useState(false); 
+    const [newPhone, setNewPhone] = useState(''); 
+    
+    useEffect(() => {
+        const fetchCompanyPhone = async () => {
+            try {
+                const response = await actions.getCompanyPhone();
+                if (response) {
+                    setNewPhone(response);
+                }
+            } catch (error) {
+                console.error("Error al obtener el telefono de la empresa:", error);
+            }
+        };
+        fetchCompanyPhone();
+    }, [actions.getCompanyPhone]); // Solo depende de getCompanyPhone
+    
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
-
+    
     const handleSave = async (e) => {
-        e.preventDefault(); // Asegúrate de que el formulario no se recargue
-
+        e.preventDefault();
+        if (!newPhone.trim()) {
+            console.error("El telefono de la empresa no puede estar vacío.");
+            return;
+        }
         try {
-            const response = await fetch('https://studious-garbanzo-g4xv5w4wq96whpg79-3001.app.github.dev/updateCompanyPhone', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ phone: newPhone })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setCompanyPhone(newPhone); // Actualiza el teléfono mostrado
-                increaseProgress(10); // Aumenta el progreso
-                handleClose(); // Cierra el modal
+            const response = await actions.updateCompanyPhone(newPhone);
+            if (response) {
+                increaseProgress(10);
             } else {
-                console.error('Error al guardar el teléfono:', data.msg);
-                alert(`Error: ${data.msg}`); // Muestra un mensaje de error al usuario
+                console.error("Error al actualizar el telefono de la empresa");
             }
         } catch (error) {
-            console.error('Error de red:', error);
-            alert('Error de red: Por favor, inténtelo de nuevo más tarde.');
+            console.error("Error al guardar el telefono de la empresa:", error);
+        } finally {
+            handleClose();
         }
     };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleSave(e);
-        }
-    };
-
+    
     return (
         <>
             <div className="d-flex align-items-center" style={{
@@ -58,7 +57,7 @@ export const EditCompanyPhone = ({ increaseProgress }) => {
                         icon={faPhone}
                         style={{ color: '#6793AE', width: '25px', height: '25px', marginRight: '10px' }}
                     />
-                    {companyPhone}
+                    {store.user?.phone}
                 </p>
 
                 <button
@@ -75,7 +74,7 @@ export const EditCompanyPhone = ({ increaseProgress }) => {
                     <Modal.Title>Editar el Teléfono de la Empresa</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onKeyDown={handleKeyDown} onSubmit={handleSave}>
+                    <Form onSubmit={handleSave}>
                         <Form.Group controlId="formPhone">
                             <Form.Control
                                 type="text"
@@ -91,11 +90,7 @@ export const EditCompanyPhone = ({ increaseProgress }) => {
                     <Button variant="secondary" onClick={handleClose} style={{ backgroundColor: 'rgba(103, 147, 174, 1)' }}>
                         Cancelar
                     </Button>
-                    <Button
-                        type="submit"
-                        variant="secondary"
-                        style={{ backgroundColor: 'rgba(103, 147, 174, 0.27)', color: 'rgba(103, 147, 174, 1)' }}
-                    >
+                    <Button type="submit" variant="secondary" onClick={handleSave} style={{ backgroundColor: 'rgba(103, 147, 174, 0.27)', color: 'rgba(103, 147, 174, 1)' }}>
                         Guardar
                     </Button>
                 </Modal.Footer>

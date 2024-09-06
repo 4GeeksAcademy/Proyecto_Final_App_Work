@@ -9,8 +9,7 @@ import { useNavigate } from "react-router-dom";
 export const Register = () => {
 
   const { store, actions } = useContext(Context);
-  const [isDev, setIsDev] = useState(true)
-  const [focusActive, setFocusActive] = useState(false)
+
   const {
     register,
     formState: { errors },
@@ -35,15 +34,6 @@ export const Register = () => {
     return () => clearTimeout(timer);
   }
 
-  const handleDevActive = () => {
-    setIsDev(false)
-    setFocusActive(true)
-  }
-
-  const handleCompanyActive = () => {
-    setIsDev(true)
-    setFocusActive(true)
-  }
 
 
   return (
@@ -53,10 +43,6 @@ export const Register = () => {
           <div className='col header-formulario'>
             <h1 className="fw-bold fs-1">Bienvenido!!!</h1>
             <span className="fw-lighter fs-5 mb-5">Empieza tu viaje con nosotros.</span>
-            <div className="d-flex mx-auto flex-column w-100 justify-content-around my-5">
-              <button className={`btn btn-light py-3 my-2 colortext ${focusActive && !isDev && "selectActive"}`} onClick={handleDevActive}>Pulsa aquí si eres empleador</button>
-              <button className={`btn btn-light py-3 my-2 colortext ${focusActive && isDev && "selectActive"}`} onClick={handleCompanyActive}>Pulsa aquí si eres programador</button>
-            </div>
           </div>
           <div className="col my-auto">
             <form
@@ -65,10 +51,7 @@ export const Register = () => {
             >
               <div className=" w-100 text-center ">
                 <h1 className="fw-bold fs-1" >Crear Cuenta</h1>
-                <h4 className="fw-lighter fs-3">{isDev ? "Programador" : "Empresa"}</h4>
               </div>
-
-
 
               {store?.msg && <AlertSuccess />}
 
@@ -101,23 +84,21 @@ export const Register = () => {
                     </button>
                   )}
                 </div>
-                {isDev && (
-                  <div className="form-group mb-2">
-                    <input
-                      type="text"
-                      className="sombreado form-control"
-                      id="username"
-                      placeholder="Apellidos.."
-                      {...register("username", { required: true })}
-                      aria-invalid={errors.username ? "true" : "false"}
-                    />
-                    {errors.username?.type === "required" && (
-                      <button className="btn btn-warning w-100 mt-2" role="alert">
-                        El campo apellidos está vacío
-                      </button>
-                    )}
-                  </div>
-                )}
+                <div className="form-group mb-2">
+                  <input
+                    type="text"
+                    className="sombreado form-control"
+                    id="username"
+                    placeholder="Apellidos.."
+                    {...register("username", { required: true })}
+                    aria-invalid={errors.username ? "true" : "false"}
+                  />
+                  {errors.username?.type === "required" && (
+                    <button className="btn btn-warning w-100 mt-2" role="alert">
+                      El campo apellidos está vacío
+                    </button>
+                  )}
+                </div>
 
                 <div className="form-group mb-2">
                   <input
@@ -176,18 +157,17 @@ export const Register = () => {
                     </button>
                   )}
                 </div>
-                {!isDev && (
-                  <div className="form-group">
+                <div className="form-group">
 
-                    <input
-                      type="text"
-                      className="form-control sombreado"
-                      id="cif"
-                      {...register("cif")}
-                      placeholder="Escriba el CIF.."
-                    />
-                  </div>
-                )}
+                  <input
+                    type="text"
+                    className="form-control sombreado"
+                    id="cif"
+                    {...register("cif")}
+                    placeholder="Escriba el CIF.."
+                  />
+                </div>
+
 
 
                 <button type="submit" className="btn w-100 mt-4 stylebutton p-3">

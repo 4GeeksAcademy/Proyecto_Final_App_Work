@@ -1,5 +1,5 @@
 .frase {
-    margin:60px;
+    margin: 60px;
     justify-content: center;
     text-align: center;
     color: #6793AE;
@@ -8,12 +8,12 @@
 }
 
 .mission-vision-section {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: stretch; 
-    flex-wrap: wrap; 
-    margin-left: 70px; 
-    margin-right: 70px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-left: 70px;
+    margin-right: 70px;
 }
 
 .mission-vision-section .mission-box,
@@ -21,16 +21,16 @@
     border-radius: 10px;
     margin-bottom: 30px;
     text-align: justify;
-    flex: 1; 
-    margin-right: 15px; 
+    flex: 1;
+    margin-right: 15px;
 }
 
 .mission-vision-section .mission-box {
-    margin-right: 15px; 
+    margin-right: 15px;
 }
 
 .mission-vision-section .vision-box {
-    margin-right: 0; 
+    margin-right: 0;
 }
 
 .section-margin {
@@ -50,9 +50,11 @@
 .why-choose-us-section .benefits-grid .benefit-item {
     text-align: center;
     border-radius: 10px;
-    padding: 20px 10px; 
-    margin: 0 5px; /* Margen de 5px entre las cajas */
-    flex: 1; /* Permite que las cajas ocupen el mismo ancho */
+    padding: 20px 10px;
+    margin: 0 5px;
+    /* Margen de 5px entre las cajas */
+    flex: 1;
+    /* Permite que las cajas ocupen el mismo ancho */
     transition: transform 0.3s ease;
     margin-bottom: 60px;
 }
@@ -84,7 +86,11 @@
     margin-bottom: 15px;
 }
 
-.value-item:hover, 
+.value-item:hover,
 .benefit-item:hover {
     transform: translateY(-5px);
+}
+
+.contenedor {
+    min-height: 80rem;
 }

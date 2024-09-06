@@ -6,7 +6,7 @@ export const SobreNosotros = () => {
     const { store, actions } = useContext(Context);
 
     return (
-        <div>
+        <div className="contenedor ">
             <section className="about-us">
                 <h2 className="frase">"Somos el puente entre empresas visionarias y programadores freelance talentosos, creando conexiones que impulsan la innovación" </h2>
             </section>
